@@ -1,0 +1,43 @@
+# Ansible Playbook to deploy a web server
+---
+- hosts: ws
+  gather_facts: true
+  become: true
+  vars:
+    pkgs:
+      - unzip
+      - wget
+      - httpd
+  tasks:
+    - name: install packages
+      command: apt-get install -y {{ item }}
+      when: ansible_os_family == 'Debian'
+      loop: "{{ pkgs }}"
+    - name: install packages
+      command: yum install -y {{ item }}
+      when: ansible_os_family == 'RedHat'
+      loop: "{{ pkgs }}"
+    - name: start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: get_url application
+      get_url:
+        url: https://github.com/utrains/static-resume/archive/refs/heads/main.zip
+        dest: /tmp/main.zip
+    - name: unarchive application
+      unarchive:
+        src: /tmp/main.zip
+        dest: /tmp
+        remote_src: yes
+    - name: copy application files
+      copy:
+        src: /tmp/static-resume-main/
+        dest: /var/www/html/
+        remote_src: yes
+    - name: start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: true

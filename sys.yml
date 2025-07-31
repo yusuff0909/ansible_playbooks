@@ -1,0 +1,21 @@
+---
+- hosts: ws
+  become: true
+  gather_facts: true
+  tasks:
+    - name: install httpd
+      command: yum install httpd -y
+      ignore_errors: yes
+    - name: Start httpd service
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Check if httpd is running
+      command: systemctl status httpd
+      register: httpd_status
+      ignore_errors: yes
+    - name: Display httpd status
+      debug:
+        msg: "httpd status: {{ httpd_status.stdout }}"
+      when: httpd_status.stdout is defined

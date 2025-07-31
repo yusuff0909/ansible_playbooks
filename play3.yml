@@ -1,0 +1,24 @@
+---
+- hosts: db
+  become: true
+  ignore_errors: true
+  gather_facts: true
+  become_user: root
+  vars:
+    pkg: apache2
+  vars_files:
+    - vars.yml
+
+  tasks:
+    
+    - name: install Apache
+      apt:
+        name: "{{ pkg }}"
+        state: present
+        update_cache: yes
+      when: ansible_processor_nproc == 1
+    - name: Create index.html file
+      file:
+        dest: "{{ file_path }}"
+        state: touch
+      when: 2 < 0
