@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  ignore_errors: true
+  vars:
+    pkg: unzip
+    install_httpd: true
+  tasks:
+    - name: list fils in /tmp
+      command: ls -l /tmp
+      register: tmp_files
+    - name: debug tmp files
+      debug:
+        var: tmp_files.stdout_lines
+    - name: find all text files in /tmp
+      shell: ls /tmp/ | grep .txt
+      register: text_files
+    - name: debug text files
+      debug:
+        var: text_files.stdout_lines
+    - name: install unzip package
+      command: apt-get install -y {{ pkg }}
+      when: ansible_os_family == 'Debian'
+    - name: install unzip package
+      command: yum install -y {{ pkg }}
+      when: ansible_os_family == 'RedHat'
+
+    - name: remove users
+      user:
+        name: "{{ item}}"
+        state: absent
+      loop:
+       - user1
+       - user2
+       - user3
+    - name: message what kind of OS
+      debug:
+        msg: "This is a {{ ansible_os_family }} system"
+      tags: os_info
+    - name: uninstall httpd
+      command: yum remove -y httpd
+      when: install_httpd and ansible_os_family == 'RedHat'
+    - name: uninstall httpd
+      command: apt-get remove -y apache2
+      when: install_httpd and ansible_os_family == 'Debian'

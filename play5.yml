@@ -1,0 +1,24 @@
+---
+- hosts: db
+  become: true
+  gather_facts: true
+  ignore_errors: true
+  tasks:
+    - name: Create folders # /tmp/log, /tmp/deploy, /tmp/dev
+      file:
+        state: directory
+        name: "{{ item }}"
+      loop:
+        - /tmp/log
+        - /tmp/deploy
+        - /tmp/dev
+
+    - name: Install packages
+      package:
+        state: present
+        name: "{{ item }}"
+      loop:
+        - git
+        - wget
+        - curl
+        - unzip

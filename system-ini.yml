@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: check memory
+      command: free -m
+      register: memory_check
+    - debug:
+        var: memory_check.stdout_lines
+    - name: check disk space
+      command: df -h
+      register: disk_space_check
+    - debug:
+        var: disk_space_check.stdout_lines
+    - name: number of processors
+      command: nproc
+      register: processor_count
+    - debug:
+        var: processor_count.stdout
+    - name: lsblk
+      command: lsblk
+      register: lsblk_output
+    - debug:
+        var: lsblk_output.stdout_lines

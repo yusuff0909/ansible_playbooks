@@ -1,0 +1,23 @@
+---
+- hosts: wind
+  tasks:
+    - name: Create folder
+      win_file:
+        path: C:\Users\Administrator\Desktop\ansible-windows
+        state: directory
+    - name: Download software
+      win_get_url:
+        url: "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.14.tar.xz"
+        dest: C:\Users\Administrator\Desktop\ansible-windows
+    - name: Ensure IIS is installed
+      win_feature:
+        name: Web-Server
+        state: present
+    - name: Ensure IIS is running
+      win_service:
+        name: W3SVC
+        state: started
+    - name: Copy index.html to IIS root
+      win_copy:
+        src: index.html
+        dest: C:\inetpub\wwwroot\index.html

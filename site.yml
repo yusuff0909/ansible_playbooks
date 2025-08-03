@@ -1,0 +1,4 @@
+---
+- hosts: wind
+  roles:
+    - dir

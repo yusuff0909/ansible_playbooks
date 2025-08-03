@@ -1,0 +1,29 @@
+---
+- hosts: ws
+  become: true
+  gather_facts: true
+  tasks:
+    - name: check memory
+      command: free -m
+      register: memory_check
+    - debug:
+        var: memory_check.stdout_lines
+    - name: Create file
+      file:
+        path: /tmp/playbooks.txt
+        state: touch
+    - name: Create a directory
+      file:
+        path: /tmp/playbooks_dir
+        state: directory
+    - name: Create group
+      group:
+        name: security
+        state: present
+    - name: install apache
+      command: yum install httpd -y
+    - name: Check uptime
+      shell: uptime
+    - name: command
+      shell: cat /etc/passwd |grep root
+      ignore_errors: true

@@ -1,0 +1,26 @@
+---
+- hosts: ws
+  become: true
+  vars:
+    memory: free -m
+  
+  tasks:
+    - name: check memory
+      command: "{{ memory}}"
+      register: memory_output
+    - name: display memory_output
+      debug:
+        var: memory_output
+    
+    - name: create users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - alice
+        - bob
+        - charlie
+
+    - name: echo message
+      debug:
+        msg: "Users created successfully"

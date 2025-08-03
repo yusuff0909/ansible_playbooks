@@ -1,0 +1,4 @@
+---
+# vars file for dir
+    dir_path: C:\Users\Administrator\Desktop\ansible-windows
+    dir_state: directory

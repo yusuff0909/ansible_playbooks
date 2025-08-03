@@ -1,0 +1,22 @@
+---
+- hosts: db
+  become: true
+  ignore_errors: true
+  gather_facts: true
+  become_user: root
+  vars:
+    l_name: Koffi
+  tasks:
+    - name: Debug module
+      debug:
+        msg: "This is a debug message for the db host"
+    - name: Display variable
+      debug:
+        var: l_name
+    - name: show uptime
+      command: uptime
+      register: uptime_result # Registering the result of the uptime command
+
+    - name: Show uptime result
+      debug: # Displaying the result
+        var: uptime_result.stdout_lines # Displaying the output of the uptime command

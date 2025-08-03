@@ -1,0 +1,8 @@
+---
+# tasks file for dir
+
+
+- name: Create folder
+  win_file:
+    path: "{{ dir_path }}"
+    state: "{{ dir_state }}"
